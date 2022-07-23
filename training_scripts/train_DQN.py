@@ -13,7 +13,7 @@ from stable_baselines.deepq.policies import MlpPolicy, CnnPolicy
 from stable_baselines import logger
 from stable_baselines.common.callbacks import EvalCallback
 
-NUM_TIMESTEPS = int(2e7)
+NUM_TIMESTEPS = int(5e6)
 SEED = 721
 EVAL_FREQ = 250000
 EVAL_EPISODES = 1000
@@ -24,8 +24,8 @@ logger.configure(folder=LOGDIR)
 env = gym.make("SlimeVolleyNoPixelAtariActions-v0")
 env.seed(SEED)
 
-# take mujoco hyperparams (but doubled timesteps_per_actorbatch to cover more steps.)
-model = DQN(MlpPolicy, env, gamma=0.99, tensorboard_log=LOGDIR, verbose=2)
+# model = DQN(MlpPolicy, env, gamma=0.99, tensorboard_log=LOGDIR, verbose=0, prioritized_replay=True)
+model = DQN.load(os.path.join(LOGDIR, "best_model"), env)
 
 eval_callback = EvalCallback(env, best_model_save_path=LOGDIR, log_path=LOGDIR, eval_freq=EVAL_FREQ, n_eval_episodes=EVAL_EPISODES)
 

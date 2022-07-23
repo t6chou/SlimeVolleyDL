@@ -15,7 +15,7 @@ from stable_baselines import A2C
 from stable_baselines.common import make_vec_env
 
 
-NUM_TIMESTEPS = int(2e7)
+NUM_TIMESTEPS = int(5e6)
 SEED = 721
 EVAL_FREQ = 250000
 EVAL_EPISODES = 1000
@@ -27,8 +27,9 @@ logger.configure(folder=LOGDIR)
 env = make_vec_env('SlimeVolley-v0', n_envs=1)
 env.seed(SEED)
 
-# take mujoco hyperparams 
-model = A2C(MlpPolicy, env, gamma=0.99, tensorboard_log=LOGDIR, verbose=2)
+
+# model = A2C(MlpPolicy, env, gamma=0.99, tensorboard_log=LOGDIR, verbose=0, n_steps=50, lr_schedule='linear')
+model = A2C.load(os.path.join(LOGDIR, "best_model"), env)
 
 eval_callback = EvalCallback(env, best_model_save_path=LOGDIR, log_path=LOGDIR, eval_freq=EVAL_FREQ, n_eval_episodes=EVAL_EPISODES)
 
