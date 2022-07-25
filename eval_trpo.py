@@ -43,7 +43,7 @@ def rollout(env, policy, render_mode=False):
 
 if __name__=="__main__":
 
-  parser = argparse.ArgumentParser(description='Evaluate pre-trained a2c agent.')
+  parser = argparse.ArgumentParser(description='Evaluate pre-trained trpo agent.')
   parser.add_argument('--model-path', help='path to stable-baselines model.',
                         type=str, default="trpo/best_model.zip")
   parser.add_argument('--render', action='store_true', help='render to screen?', default=False)
@@ -51,7 +51,7 @@ if __name__=="__main__":
   args = parser.parse_args()
   render_mode = args.render
 
-  env = make_vec_env('SlimeVolley-v0', n_envs=1)
+  env = gym.make("SlimeVolley-v0")
 
   # the yellow agent:
   print("Loading", args.model_path)

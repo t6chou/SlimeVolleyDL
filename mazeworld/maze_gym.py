@@ -17,33 +17,38 @@ UNIT = 40   # pixels per cell (width and height)
 MAZE_H = 10  # height of the entire grid in cells
 MAZE_W = 10  # width of the entire grid in cells
 origin = np.array([UNIT/2, UNIT/2])
+agentXY = [4,2]
+goalXY = [2,6]
 
 
 class Maze(gym.Env, tk.Tk, object):
-    def __init__(self, showRender=False, name=''):
+
+    metadata = {
+        'render.modes': ['human', 'rgb_array', 'state']
+    } 
+
+    def __init__(self, showRender=False):
         super(Maze, self).__init__()
-        agentXY = [4,2]
-        goalXY = [2,6]
-        walls=np.array([[1,2],[1,3],[2,3],[7,4],[3,6],[3,7],[2,7]])
-        pits=np.array([[2,2],[3,4],[4,3],[5,2],[0,5],[7,5],[0,6],[8,6],[0,7],[4,7],[2,8]])
-        self.agentx = 5
-        self.agenty = 1
-        self.goalx = 5
-        self.goaly = 7
+
+        self.walls=np.array([[1,2],[1,3],[2,3],[7,4],[3,6],[3,7],[2,7]])
+        self.pits=np.array([[2,2],[3,4],[4,3],[5,2],[0,5],[7,5],[0,6],[8,6],[0,7],[4,7],[2,8]])
+        self.agentXY = agentXY
+        self.goalXY = goalXY
+        self.agentx = agentXY[0]
+        self.agenty = agentXY[1]
+        self.goalx = goalXY[0]
+        self.goaly = goalXY[1]
         self.observation_space = spaces.MultiDiscrete([10, 10])
         self.action_space = spaces.Discrete(4)
         self.n_actions = 4
-        self.agentXY = agentXY
-        self.goalXY = goalXY
         self.wallblocks = []
         self.pitblocks=[]
         self.showRender = showRender
         self.UNIT = 40   # pixels per cell (width and height)
-        self.MAZE_H = 10  # height of the entire grid in cells
-        self.MAZE_W = 10  # width of the entire grid in cells
-        self.title('maze {}'.format(name))
+        self.MAZE_H = MAZE_H  # height of the entire grid in cells
+        self.MAZE_W = MAZE_W  # width of the entire grid in cells
         self.geometry('{0}x{1}'.format(MAZE_H * UNIT, MAZE_W * UNIT))
-        self.build_shape_maze(agentXY, goalXY, walls, pits)
+        self.build_shape_maze(self.agentXY, self.goalXY, self.walls, self.pits)
 
 
     def build_shape_maze(self,agentXY,goalXY, walls,pits):
@@ -134,7 +139,7 @@ class Maze(gym.Env, tk.Tk, object):
         else:
             if(resetAgent):
                 self.canvas.delete(self.agent)
-                self.add_agent(self.agentXY[0],self.agentXY[1])
+                self.add_agent(x=self.agentXY[0],y=self.agentXY[1])
 
             # return self.canvas.coords(self.agent)
             return np.array([self.agentx, self.agenty])
@@ -159,31 +164,32 @@ class Maze(gym.Env, tk.Tk, object):
             else:
                 reward = -0.1
                 done = False
-            return reward,done, reverse
+            return reward,done,reverse
 
-    def _get_info(self):
+    def get_info(self):
         return {
             "distance": np.array([self.agentx - self.goalx, self.agenty - self.agenty])
         }
+
     '''step - definition of one-step dynamics function'''
     def step(self, action):
         s = self.canvas.coords(self.agent)
         base_action = np.array([0, 0])
         if action == 0:   # up
             if s[1] > UNIT:
-                self.agentx -= 1
+                self.agenty -= 1
                 base_action[1] -= UNIT
         elif action == 1:   # down
             if s[1] < (MAZE_H - 1) * UNIT:
-                self.agentx += 1
+                self.agenty += 1
                 base_action[1] += UNIT
         elif action == 2:   # right
             if s[0] < (MAZE_W - 1) * UNIT:
-                self.agenty += 1
+                self.agentx += 1
                 base_action[0] += UNIT
         elif action == 3:   # left
             if s[0] > UNIT:
-                self.agenty -= 1
+                self.agentx -= 1
                 base_action[0] -= UNIT
 
         self.canvas.move(self.agent, base_action[0], base_action[1])  # move agent
@@ -193,12 +199,12 @@ class Maze(gym.Env, tk.Tk, object):
         # call the reward function
         reward, done, reverse = self.computeReward(s, action, s_)
         if(reverse):
-            self.agentx = self.agentx*-1
-            self.agenty = self.agenty*-1
+            self.agentx = self.agentx - 1 if (s[0] < (MAZE_W - 1) * UNIT) else self.agentx + 1
+            self.agenty = self.agenty - 1 if (s[1] < (MAZE_H - 1) * UNIT) else self.agentx + 1
             self.canvas.move(self.agent, -base_action[0], -base_action[1])  # move agent back
             s_ = self.canvas.coords(self.agent)
 
-        return np.array([self.agentx, self.agenty]), reward, done, {}
+        return np.array([self.agentx, self.agenty]), reward, done, self.get_info()
 
     def render(self, sim_speed=.01):
         if self.showRender:

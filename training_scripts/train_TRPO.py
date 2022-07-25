@@ -31,7 +31,7 @@ def slimeVolley():
     env = gym.make("SlimeVolley-v0")
     # env.seed(SEED)
 
-    model = TRPO(MlpPolicy, env, tensorboard_log=LOGDIR, verbose=2)
+    model = TRPO(MlpPolicy, env, tensorboard_log=LOGDIR, verbose=0, timesteps_per_batch=512, max_kl=0.001, cg_damping=float(1e-3), lam=0.99, vf_stepsize=float(1e-4))
     # model = A2C.load(os.path.join(LOGDIR, "best_model"), env)
 
     eval_callback = EvalCallback(env, best_model_save_path=LOGDIR, log_path=LOGDIR, eval_freq=EVAL_FREQ, n_eval_episodes=EVAL_EPISODES)
