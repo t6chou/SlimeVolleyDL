@@ -45,7 +45,8 @@ def mazeWorld():
 
     env = Maze()
 
-    model = DQN(MlpPolicy, env, tensorboard_log=LOGDIR, verbose=0, learning_rate=float(1e-4), target_network_update_freq=1000, train_freq=4, exploration_final_eps=0.01, prioritized_replay=True, learning_starts=10000)
+    model = DQN(MlpPolicy, env, tensorboard_log=LOGDIR, verbose=0, learning_rate=float(1e-3), buffer_size=50000, prioritized_replay=True)
+
     # model = DQN.load(os.path.join(LOGDIR, "best_model"), env)
 
     eval_callback = EvalCallback(env, best_model_save_path=LOGDIR, log_path=LOGDIR, eval_freq=EVAL_FREQ, n_eval_episodes=EVAL_EPISODES)

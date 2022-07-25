@@ -21,14 +21,13 @@ EVAL_FREQ = 250000
 EVAL_EPISODES = 1000
 
 def slimeVolley():
-
     LOGDIR = "a2c" # moved to zoo afterwards.
 
     logger.configure(folder=LOGDIR)
     # parallel environment
     env = make_vec_env('SlimeVolley-v0', n_envs=1)
 
-    model = A2C(MlpPolicy, env, tensorboard_log=LOGDIR, verbose=0)
+    model = A2C(MlpPolicy, env, tensorboard_log=LOGDIR, verbose=0, lr_schedule='linear', ent_coef=0.001, gamma=0.995, vf_coef=0.4, learning_rate=0.0008)
     # model = A2C.load(os.path.join(LOGDIR, "best_model"), env)
 
     eval_callback = EvalCallback(env, best_model_save_path=LOGDIR, log_path=LOGDIR, eval_freq=EVAL_FREQ, n_eval_episodes=EVAL_EPISODES)
@@ -61,8 +60,8 @@ def mazeWorld():
 
 
 if __name__=="__main__":
-    # slimeVolley()
-    mazeWorld()
+    slimeVolley()
+    # mazeWorld()
 
 
 

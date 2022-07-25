@@ -22,10 +22,10 @@ origin = np.array([UNIT/2, UNIT/2])
 class Maze(gym.Env, tk.Tk, object):
     def __init__(self, showRender=False, name=''):
         super(Maze, self).__init__()
-        agentXY = [5,1]
-        goalXY = [5,7]
-        walls=np.array([[6,7],[2,3]])
-        pits=np.array([[4,9],[7,4]])
+        agentXY = [4,2]
+        goalXY = [2,6]
+        walls=np.array([[1,2],[1,3],[2,3],[7,4],[3,6],[3,7],[2,7]])
+        pits=np.array([[2,2],[3,4],[4,3],[5,2],[0,5],[7,5],[0,6],[8,6],[0,7],[4,7],[2,8]])
         self.agentx = 5
         self.agenty = 1
         self.goalx = 5
@@ -116,7 +116,7 @@ class Maze(gym.Env, tk.Tk, object):
 
         x = wall_center[0]/UNIT
         y = wall_center[1]/UNIT
-        print(x,y )
+        print(x,y)
         # wall_center = origin + np.array([UNIT * x, UNIT*y])
         # self.wallblocks.append(self.canvas.create_rectangle(
         #     wall_center[0] - 15, wall_center[1] - 15,
