@@ -9,6 +9,8 @@ if sys.version_info.major == 2:
     import Tkinter as tk
 else:
     import tkinter as tk
+from gym.envs.registration import register
+
 
 
 UNIT = 40   # pixels per cell (width and height)
@@ -18,7 +20,7 @@ origin = np.array([UNIT/2, UNIT/2])
 
 
 class Maze(gym.Env, tk.Tk, object):
-    def __init__(self, showRender=True, name=''):
+    def __init__(self, showRender=False, name=''):
         super(Maze, self).__init__()
         agentXY = [5,1]
         goalXY = [5,7]
@@ -214,6 +216,7 @@ def update():
             s, r, done = env.step(a)
             if done:
                 break
+
 
 
 if __name__ == '__main__':

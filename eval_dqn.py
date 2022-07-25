@@ -19,6 +19,7 @@ import argparse
 import slimevolleygym
 from stable_baselines.common.policies import MlpPolicy
 from stable_baselines import DQN
+from mazeworld.maze_gym import Maze
 
 
 def rollout(env, policy, render_mode=False):
@@ -51,6 +52,7 @@ if __name__=="__main__":
   render_mode = args.render
 
   env = gym.make("SlimeVolleyNoPixelAtariActions-v0")
+  # env = Maze()
 
   # the yellow agent:
   print("Loading", args.model_path)

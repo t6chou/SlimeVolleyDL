@@ -13,28 +13,59 @@ from stable_baselines import logger
 from stable_baselines.common.callbacks import EvalCallback
 from stable_baselines import A2C
 from stable_baselines.common import make_vec_env
+from mazeworld.maze_gym import Maze
 
 
-NUM_TIMESTEPS = int(5e6)
-SEED = 721
+NUM_TIMESTEPS = int(1e7)
 EVAL_FREQ = 250000
 EVAL_EPISODES = 1000
-LOGDIR = "a2c" # moved to zoo afterwards.
 
-logger.configure(folder=LOGDIR)
+def slimeVolley():
 
-# parallel environment
-env = make_vec_env('SlimeVolley-v0', n_envs=1)
-env.seed(SEED)
+    LOGDIR = "a2c" # moved to zoo afterwards.
+
+    logger.configure(folder=LOGDIR)
+    # parallel environment
+    env = make_vec_env('SlimeVolley-v0', n_envs=1)
+
+    model = A2C(MlpPolicy, env, tensorboard_log=LOGDIR, verbose=0)
+    # model = A2C.load(os.path.join(LOGDIR, "best_model"), env)
+
+    eval_callback = EvalCallback(env, best_model_save_path=LOGDIR, log_path=LOGDIR, eval_freq=EVAL_FREQ, n_eval_episodes=EVAL_EPISODES)
+
+    model.learn(total_timesteps=NUM_TIMESTEPS, callback=eval_callback)
+
+    model.save(os.path.join(LOGDIR, "final_model")) # probably never get to this point.
+
+    env.close()
 
 
-# model = A2C(MlpPolicy, env, gamma=0.99, tensorboard_log=LOGDIR, verbose=0, n_steps=50, lr_schedule='linear')
-model = A2C.load(os.path.join(LOGDIR, "best_model"), env)
+def mazeWorld():
 
-eval_callback = EvalCallback(env, best_model_save_path=LOGDIR, log_path=LOGDIR, eval_freq=EVAL_FREQ, n_eval_episodes=EVAL_EPISODES)
+    LOGDIR = "a2c_maze" # moved to zoo afterwards.
 
-model.learn(total_timesteps=NUM_TIMESTEPS, callback=eval_callback)
+    logger.configure(folder=LOGDIR)
 
-model.save(os.path.join(LOGDIR, "final_model")) # probably never get to this point.
+    env = Maze()
 
-env.close()
+    model = A2C(MlpPolicy, env, tensorboard_log=LOGDIR, verbose=0)
+    # model = A2C.load(os.path.join(LOGDIR, "best_model"), env)
+
+    eval_callback = EvalCallback(env, best_model_save_path=LOGDIR, log_path=LOGDIR, eval_freq=EVAL_FREQ, n_eval_episodes=EVAL_EPISODES)
+
+    model.learn(total_timesteps=NUM_TIMESTEPS, callback=eval_callback)
+
+    model.save(os.path.join(LOGDIR, "final_model")) # probably never get to this point.
+
+    env.close()
+
+
+if __name__=="__main__":
+    # slimeVolley()
+    mazeWorld()
+
+
+
+
+
+
