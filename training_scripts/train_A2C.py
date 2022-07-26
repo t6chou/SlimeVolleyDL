@@ -47,7 +47,7 @@ def mazeWorld():
 
     env = Maze()
 
-    model = A2C(MlpPolicy, env, tensorboard_log=LOGDIR, verbose=0)
+    model = A2C(MlpPolicy, env, tensorboard_log=LOGDIR, verbose=0, gamma=0.95, learning_rate=0.001, epsilon=0.001)
     # model = A2C.load(os.path.join(LOGDIR, "best_model"), env)
 
     eval_callback = EvalCallback(env, best_model_save_path=LOGDIR, log_path=LOGDIR, eval_freq=EVAL_FREQ, n_eval_episodes=EVAL_EPISODES)
