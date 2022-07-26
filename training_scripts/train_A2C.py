@@ -13,7 +13,7 @@ from stable_baselines import logger
 from stable_baselines.common.callbacks import EvalCallback
 from stable_baselines import A2C
 from stable_baselines.common import make_vec_env
-from mazeworld.maze_gym import Maze
+from maze.maze_gym import Maze
 
 
 NUM_TIMESTEPS = int(1e7)
@@ -47,7 +47,7 @@ def mazeWorld():
 
     env = Maze()
 
-    model = A2C(MlpPolicy, env, tensorboard_log=LOGDIR, verbose=0)
+    model = A2C(MlpPolicy, env, tensorboard_log=LOGDIR, verbose=2, ent_coef=0)
     # model = A2C.load(os.path.join(LOGDIR, "best_model"), env)
 
     eval_callback = EvalCallback(env, best_model_save_path=LOGDIR, log_path=LOGDIR, eval_freq=EVAL_FREQ, n_eval_episodes=EVAL_EPISODES)

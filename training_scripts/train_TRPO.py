@@ -14,7 +14,7 @@ from stable_baselines.common.callbacks import EvalCallback
 # from stable_baselines import A2C
 from stable_baselines.trpo_mpi.trpo_mpi import TRPO
 from stable_baselines.common import make_vec_env
-from mazeworld.maze_gym import Maze
+from maze.maze_gym import Maze
 
 
 NUM_TIMESTEPS = int(1e7)
@@ -64,8 +64,8 @@ def mazeWorld():
 
 
 if __name__=="__main__":
-    slimeVolley()
-    # mazeWorld()
+    # slimeVolley()
+    mazeWorld()
 
 
 
