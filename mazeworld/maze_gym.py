@@ -27,7 +27,7 @@ class Maze(gym.Env, tk.Tk, object):
         'render.modes': ['human', 'rgb_array', 'state']
     } 
 
-    def __init__(self, showRender=False):
+    def __init__(self, showRender=True):
         super(Maze, self).__init__()
 
         self.walls=np.array([[1,2],[1,3],[2,3],[7,4],[3,6],[3,7],[2,7]])
@@ -206,10 +206,12 @@ class Maze(gym.Env, tk.Tk, object):
 
         return np.array([self.agentx, self.agenty]), reward, done, self.get_info()
 
-    def render(self, sim_speed=.01):
-        if self.showRender:
-            time.sleep(sim_speed)
-            self.update()
+    def render(self, mode='human', delay=0.2):
+        # if self.showRender:
+        if mode != 'human':
+            raise ValueError('mode is not human')
+        time.sleep(delay)
+        self.update()
 
 
 def update():
