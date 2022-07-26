@@ -60,8 +60,8 @@ def mazeWorld():
 
 
 if __name__=="__main__":
-    slimeVolley()
-    # mazeWorld()
+    # slimeVolley()
+    mazeWorld()
 
 
 
