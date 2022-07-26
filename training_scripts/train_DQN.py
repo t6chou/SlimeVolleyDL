@@ -3,16 +3,19 @@
 # Train single CPU PPO1 on slimevolley.
 # Should solve it (beat existing AI on average over 1000 trials) in 3 hours on single CPU, within 3M steps.
 
+from math import gamma
 import os
 import gym
+import maze
 import slimevolleygym
 from slimevolleygym import SurvivalRewardEnv
+
 
 from stable_baselines import DQN
 from stable_baselines.deepq.policies import MlpPolicy
 from stable_baselines import logger
 from stable_baselines.common.callbacks import EvalCallback
-from mazeworld.maze_gym import Maze
+from stable_baselines.common import make_vec_env
 
 NUM_TIMESTEPS = int(1e7)
 EVAL_FREQ = 250000
@@ -43,9 +46,9 @@ def mazeWorld():
 
     logger.configure(folder=LOGDIR)
 
-    env = Maze()
+    env = gym.make('Maze-Easy-v0')
 
-    model = DQN(MlpPolicy, env, tensorboard_log=LOGDIR, verbose=0, learning_rate=float(1e-3), buffer_size=50000, prioritized_replay=True)
+    model = DQN(MlpPolicy, env, tensorboard_log=LOGDIR, verbose=0, gamma=0.99)
 
     # model = DQN.load(os.path.join(LOGDIR, "best_model"), env)
 
