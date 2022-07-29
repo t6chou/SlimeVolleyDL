@@ -1,9 +1,9 @@
 """
 Simple evaluation example.
 
-run: python eval_ppo.py --render
+run: python eval_trpo.py --render
 
-Evaluate PPO1 policy (MLP input_dim x 64 x 64 x output_dim policy) against built-in AI
+Evaluate TRPO policy (MLP input_dim x 64 x 64 x output_dim policy) against built-in AI
 
 """
 
@@ -13,13 +13,13 @@ warnings.filterwarnings("ignore", category=FutureWarning, module='tensorflow')
 warnings.filterwarnings("ignore", category=UserWarning, module='gym')
 
 import gym
+import maze
 import numpy as np
 import argparse
 
 import slimevolleygym
 from stable_baselines.common.policies import MlpPolicy
 from stable_baselines.trpo_mpi.trpo_mpi import TRPO
-from stable_baselines.common import make_vec_env
 
 
 def rollout(env, policy, render_mode=False):
@@ -44,13 +44,16 @@ def rollout(env, policy, render_mode=False):
 if __name__=="__main__":
 
   parser = argparse.ArgumentParser(description='Evaluate pre-trained trpo agent.')
+
+  # to eval maze environment, change default path to zoo/trpo_maze/best_model.zip
   parser.add_argument('--model-path', help='path to stable-baselines model.',
-                        type=str, default="trpo/best_model.zip")
+                        type=str, default="zoo/trpo/best_model.zip")
   parser.add_argument('--render', action='store_true', help='render to screen?', default=False)
 
   args = parser.parse_args()
   render_mode = args.render
 
+  # to eval maze environment, use 'env = gym.make('Maze-Easy-v0')'
   env = gym.make("SlimeVolley-v0")
 
   # the yellow agent:

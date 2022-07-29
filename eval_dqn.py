@@ -1,9 +1,9 @@
 """
 Simple evaluation example.
 
-run: python eval_ppo.py --render
+run: python eval_dqn.py --render
 
-Evaluate PPO1 policy (MLP input_dim x 64 x 64 x output_dim policy) against built-in AI
+Evaluate DQN policy (MLP input_dim x 64 x 64 x output_dim policy) against built-in AI
 
 """
 
@@ -13,13 +13,13 @@ warnings.filterwarnings("ignore", category=FutureWarning, module='tensorflow')
 warnings.filterwarnings("ignore", category=UserWarning, module='gym')
 
 import gym
+import maze
 import numpy as np
 import argparse
 
 import slimevolleygym
 from stable_baselines.common.policies import MlpPolicy
 from stable_baselines import DQN
-from mazeworld.maze_gym import Maze
 
 
 def rollout(env, policy, render_mode=False):
@@ -44,6 +44,8 @@ def rollout(env, policy, render_mode=False):
 if __name__=="__main__":
 
   parser = argparse.ArgumentParser(description='Evaluate pre-trained dqn agent.')
+
+  # to evaluate maze environment, change default path to zoo/dqn_maze/best_model.zip
   parser.add_argument('--model-path', help='path to stable-baselines model.',
                         type=str, default="zoo/dqn/best_model.zip")
   parser.add_argument('--render', action='store_true', help='render to screen?', default=False)
@@ -51,8 +53,8 @@ if __name__=="__main__":
   args = parser.parse_args()
   render_mode = args.render
 
+  # to eval maze environment, use 'env = gym.make('Maze-Easy-v0')'
   env = gym.make("SlimeVolleyNoPixelAtariActions-v0")
-  # env = Maze()
 
   # the yellow agent:
   print("Loading", args.model_path)

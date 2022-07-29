@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
-# Train single CPU PPO1 on slimevolley.
-# Should solve it (beat existing AI on average over 1000 trials) in 3 hours on single CPU, within 3M steps.
+# Train single DQN on slimevolley.
 
 from math import gamma
 import os
@@ -10,12 +9,10 @@ import maze
 import slimevolleygym
 from slimevolleygym import SurvivalRewardEnv
 
-
 from stable_baselines import DQN
 from stable_baselines.deepq.policies import MlpPolicy
 from stable_baselines import logger
 from stable_baselines.common.callbacks import EvalCallback
-from stable_baselines.common import make_vec_env
 
 NUM_TIMESTEPS = int(1e7)
 EVAL_FREQ = 250000
@@ -29,8 +26,8 @@ def slimeVolley():
 
     env = gym.make("SlimeVolleyNoPixelAtariActions-v0")
 
-    model = DQN(MlpPolicy, env, tensorboard_log=LOGDIR, verbose=0, learning_rate=float(1e-4), target_network_update_freq=1000, train_freq=4, exploration_final_eps=0.01, prioritized_replay=True, learning_starts=10000)
-    # model = DQN.load(os.path.join(LOGDIR, "best_model"), env)
+    model = DQN(MlpPolicy, env, tensorboard_log=LOGDIR, verbose=0, learning_rate=float(1e-4), 
+        target_network_update_freq=1000, train_freq=4, exploration_final_eps=0.01, prioritized_replay=True, learning_starts=10000)
 
     eval_callback = EvalCallback(env, best_model_save_path=LOGDIR, log_path=LOGDIR, eval_freq=EVAL_FREQ, n_eval_episodes=EVAL_EPISODES)
 
@@ -48,9 +45,7 @@ def mazeWorld():
 
     env = gym.make('Maze-Easy-v0')
 
-    model = DQN(MlpPolicy, env, tensorboard_log=LOGDIR, verbose=0, gamma=0.99)
-
-    # model = DQN.load(os.path.join(LOGDIR, "best_model"), env)
+    model = DQN(MlpPolicy, env, tensorboard_log=LOGDIR, verbose=0)
 
     eval_callback = EvalCallback(env, best_model_save_path=LOGDIR, log_path=LOGDIR, eval_freq=EVAL_FREQ, n_eval_episodes=EVAL_EPISODES)
 
@@ -62,7 +57,7 @@ def mazeWorld():
 
 
 if __name__=="__main__":
-    # slimeVolley()
+    slimeVolley()
     mazeWorld()
 
 

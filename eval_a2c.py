@@ -1,9 +1,9 @@
 """
 Simple evaluation example.
 
-run: python eval_ppo.py --render
+run: python eval_a2c.py --render
 
-Evaluate PPO1 policy (MLP input_dim x 64 x 64 x output_dim policy) against built-in AI
+Evaluate A2C policy (MLP input_dim x 64 x 64 x output_dim policy) against built-in AI
 
 """
 
@@ -13,6 +13,7 @@ warnings.filterwarnings("ignore", category=FutureWarning, module='tensorflow')
 warnings.filterwarnings("ignore", category=UserWarning, module='gym')
 
 import gym
+import maze
 import numpy as np
 import argparse
 
@@ -44,6 +45,8 @@ def rollout(env, policy, render_mode=False):
 if __name__=="__main__":
 
   parser = argparse.ArgumentParser(description='Evaluate pre-trained a2c agent.')
+
+  # to evaluate maze environment, change default path to zoo/a2c_maze/best_model.zip
   parser.add_argument('--model-path', help='path to stable-baselines model.',
                         type=str, default="zoo/a2c/best_model.zip")
   parser.add_argument('--render', action='store_true', help='render to screen?', default=False)
@@ -51,6 +54,7 @@ if __name__=="__main__":
   args = parser.parse_args()
   render_mode = args.render
 
+  # to eval maze environment, use 'env = make_vec_env('Maze-Easy-v0', n_envs=1)'
   env = make_vec_env('SlimeVolley-v0', n_envs=1)
 
   # the yellow agent:
